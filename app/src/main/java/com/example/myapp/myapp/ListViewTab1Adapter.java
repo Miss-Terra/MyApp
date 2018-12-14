@@ -3,6 +3,7 @@ package com.example.myapp.myapp;
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -44,6 +45,7 @@ public class ListViewTab1Adapter extends BaseAdapter {
         return position;
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // TODO Auto-generated method stub
@@ -73,8 +75,6 @@ public class ListViewTab1Adapter extends BaseAdapter {
                         reducer.start();
                         break;
 
-
-                       // img.setImageResource(R.drawable.ic_delete_red_24dp);
 
                     case MotionEvent.ACTION_UP:
                         AnimatorSet regainer = (AnimatorSet) AnimatorInflater.loadAnimator(v.getContext(),R.animator.regain_size);

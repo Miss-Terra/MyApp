@@ -1,17 +1,25 @@
 package com.example.myapp.myapp;
 
+import android.animation.AnimatorInflater;
+import android.animation.AnimatorSet;
+import android.annotation.SuppressLint;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
 
 import java.util.logging.Logger;
 
 
 public class MainActivity extends AppCompatActivity {
+
+    public static int tabPosition = 0;
 
     private static final String TAG = "MainActivity";
 
@@ -19,6 +27,8 @@ public class MainActivity extends AppCompatActivity {
 
     private ViewPager mViewPager;
 
+
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,23 +43,53 @@ public class MainActivity extends AppCompatActivity {
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
+
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-              //  Logger.d(TAG, "tabSelected: " + tab.getPosition());
+                Log.d(TAG, "tabSelected: " + tab.getPosition());
                 //https://stackoverflow.com/questions/28003788/fragmentpageradapter-how-to-detect-a-swipe-or-a-tab-click-when-user-goes-to-a
             }
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-             //   Logger.d(TAG, "tabUnselected: " + tab.getPosition());
+                Log.d(TAG, "tabUnselected: " + tab.getPosition());
             }
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-         //       Logger.d(TAG, "tabReselected: " + tab.getPosition());
+                Log.d(TAG, "tabReselected: " + tab.getPosition());
             }
         });
+
+        FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
+
+
+        floatingActionButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        AnimatorSet reducer = (AnimatorSet) AnimatorInflater.loadAnimator(v.getContext(), R.animator.reduce_size);
+                        reducer.setTarget(v);
+                        reducer.start();
+                        break;
+
+
+                    case MotionEvent.ACTION_UP:
+                        AnimatorSet regainer = (AnimatorSet) AnimatorInflater.loadAnimator(v.getContext(),R.animator.regain_size);
+                        regainer.setTarget(v);
+                        regainer.start();
+                        break;
+                }
+                return true;
+            }
+
+        });
+
+
 
     }
 
