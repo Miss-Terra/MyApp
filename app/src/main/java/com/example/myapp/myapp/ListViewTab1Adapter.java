@@ -14,48 +14,52 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 public class ListViewTab1Adapter extends BaseAdapter {
     Context context;
-    String[] data;
+    ArrayList<String> data;
     private static LayoutInflater inflater = null;
 
-    public ListViewTab1Adapter(Context context, String[] data) {
+    public ListViewTab1Adapter(Context context, ArrayList<String> data) {
         // TODO Auto-generated constructor stub
         this.context = context;
         this.data = data;
-        inflater = (LayoutInflater) context
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    }
+
+    public void updateList(ArrayList<String> newList) {
+        data = newList;
+        notifyDataSetChanged();
     }
 
     @Override
     public int getCount() {
         // TODO Auto-generated method stub
-        return data.length;
+        return data.size();
     }
 
     @Override
     public Object getItem(int position) {
         // TODO Auto-generated method stub
-        return data[position];
+        return data.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        // TODO Auto-generated method stub
         return position;
     }
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        // TODO Auto-generated method stub
-        boolean status = false;
 
         View view = convertView;
-        if (view == null)
+        if (view == null) {
             view = inflater.inflate(R.layout.row, null);
+        }
         TextView text = (TextView) view.findViewById(R.id.text);
-        text.setText(data[position]);
+        text.setText(data.get(position));
 
         Button deleteButton = (Button) view.findViewById(R.id.delete_button);
         ImageView deleteImage = (ImageView) view.findViewById(R.id.delete_image);

@@ -12,26 +12,34 @@ import android.widget.ListView;
 
 public class Tab1Fragment extends Fragment {
     private static final String TAG = "Tab1Fragment";
+    private ListView listView;
+    private ListViewTab1Adapter listViewTab1Adapter;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.tab1_fragment, container, false);
 
-        ListView listView = (ListView)view.findViewById(R.id.tab1_listview);
-        listView.setAdapter(new ListViewTab1Adapter(container.getContext(), getTab1List()));
+        listView = (ListView)view.findViewById(R.id.tab1_listview);
+        listViewTab1Adapter = new ListViewTab1Adapter(container.getContext(), MainActivity.tab1Database.readDatabse());
+        listView.setAdapter(listViewTab1Adapter);
+
         return view;
     }
 
 
 
-    private String [] getTab1List(){
+  /*  private String [] getTab1List(){
 
         String[] list = new String [50];
         for (int i = 0; i < 50; i++){
             list[i] = "" + i;
         }
         return list;
+    }
+*/
+    private void refreshList() {
+        listViewTab1Adapter.updateList(MainActivity.tab1Database.readDatabse());
     }
 
 }

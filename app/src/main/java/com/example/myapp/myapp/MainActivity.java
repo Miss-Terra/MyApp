@@ -12,9 +12,6 @@ import android.util.Log;
 
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ImageView;
-
-import java.util.logging.Logger;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -27,6 +24,8 @@ public class MainActivity extends AppCompatActivity {
 
     private ViewPager mViewPager;
 
+    public static Database tab1Database;
+
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -34,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Log.d(TAG, "onCreate: Starting.");
+
+        loadDatabases();
 
         mSectionsPageAdapter = new SectionsPageAdapter(getSupportFragmentManager());
 
@@ -98,5 +99,9 @@ public class MainActivity extends AppCompatActivity {
         adapter.addFragment(new Tab1Fragment(), "TAB1");
         adapter.addFragment(new Tab2Fragment(), "TAB2");
         viewPager.setAdapter(adapter);
+    }
+
+    private void loadDatabases(){
+        tab1Database = new Database(getBaseContext(), "now_tasks.csv");
     }
 }

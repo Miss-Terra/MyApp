@@ -1,5 +1,6 @@
 package com.example.myapp.myapp;
 
+import android.app.Application;
 import android.content.Context;
 import android.util.Log;
 
@@ -10,6 +11,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.FileReader;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -23,19 +25,46 @@ public class Database {
     private Context context;
 
     //TODO check if context passes here correctly...
-    //https://stackoverflow.com/questions/43055661/reading-csv-file-in-android-app
-    public void database(Context c, String f){
+    //TODO https://stackoverflow.com/questions/43055661/reading-csv-file-in-android-app
+    Database(Context c, String f){
+        context = c;
+        //TODOdatadir is broken
         filename = context.getApplicationInfo().dataDir + File.separatorChar + f;
+        Log.d("VariableTag",filename);
+        compileDatabase();
     }
 
-    public void compileDatabase() {
-        File csvfile = new File(filename);
+    private void compileDatabase() {
         try {
-            CSVReader reader = new CSVReader(new FileReader("csvfile.getAbsolutePath()"));
+            //TODO this might be broke
+            File csvfile = new File(filename);
+            //CSVReader reader = new CSVReader(new InputStreamReader(context.getResources().openRawResource(R.raw.now_tasks)));//Specify asset file name
+
+            //TODO this might be broke
+            CSVReader reader = new CSVReader(new FileReader(csvfile.getAbsolutePath()));
+
             String[] nextLine;
-            while ((nextLine = reader.readNext()) != null);
-            //TODO make sure arraylist works
-            data = Arrays.asList(nextLine);
+            while ((nextLine = reader.readNext()) != null){
+                //Log.d("VariableTag", nextLine[0]);
+                data.add(nextLine[0]);
+            }
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.d(TAG, "Error Reading File");
+        }
+    }
+
+    //TODO This is broken.
+    public void writeDatabase(String s) {
+        String[] newItem = {s};
+        File csvfile = new File(filename);
+        try {
+            CSVWriter writer = new CSVWriter(new FileWriter(csvfile, true));
+
+            writer.writeNext(newItem);
+            writer.close();
+            data.add(newItem[0]);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -43,17 +72,7 @@ public class Database {
         }
     }
 
-    //TODO Finish this
-    public void writeDatabase(String newItem) {
-        File csvfile = new File(filename);
-        try {
-            CSVWriter writer = new CSVWriter(new FileWriter(csvfile));
-            //TODO Put 'try' code above add new item. (Order maters)
-            data.add(newItem);
-        } catch (IOException e) {
-            e.printStackTrace();
-            Log.d(TAG, "Error Reading File");
-        }
-
+    public ArrayList<String> readDatabse() {
+        return (ArrayList<String>) data;
     }
 }
