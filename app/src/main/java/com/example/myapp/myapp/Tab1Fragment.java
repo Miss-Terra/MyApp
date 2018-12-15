@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-public class Tab1Fragment extends Fragment {
+public class Tab1Fragment extends Fragment implements TabFragments {
     private static final String TAG = "Tab1Fragment";
     private ListView listView;
     private ListViewTab1Adapter listViewTab1Adapter;
@@ -38,7 +38,7 @@ public class Tab1Fragment extends Fragment {
         return list;
     }
 */
-    private void refreshList() {
+    public void refreshList() {
         listViewTab1Adapter.updateList(MainActivity.tab1Database.readDatabse());
     }
 

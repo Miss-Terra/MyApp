@@ -1,18 +1,24 @@
 package com.example.myapp.myapp;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.util.Log;
+import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.content.ContentValues.TAG;
 
 public class SectionsPageAdapter extends FragmentPagerAdapter {
 
     private final List<Fragment> mFragmentList = new ArrayList<>();
     private final List<String> mFragmentTitleList = new ArrayList<>();
+    private Fragment mCurrentFragment;
 
     public SectionsPageAdapter(FragmentManager fm) {
         super(fm);
@@ -41,4 +47,18 @@ public class SectionsPageAdapter extends FragmentPagerAdapter {
 
 
 
+
+    public Fragment getCurrentFragment() {
+        return mCurrentFragment;
+    }
+
+    @Override
+    public void setPrimaryItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
+        Log.d(TAG, "Set Primary Fragment");
+        if (getCurrentFragment() != object) {
+            mCurrentFragment = ((Fragment) object);
+            Log.d(TAG, "Set Primary Fragment Defined");
+        }
+        super.setPrimaryItem(container, position, object);
+    }
 }

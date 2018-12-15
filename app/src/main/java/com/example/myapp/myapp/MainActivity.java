@@ -16,7 +16,6 @@ import android.view.View;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static int tabPosition = 0;
 
     private static final String TAG = "MainActivity";
 
@@ -83,6 +82,13 @@ public class MainActivity extends AppCompatActivity {
                         AnimatorSet regainer = (AnimatorSet) AnimatorInflater.loadAnimator(v.getContext(),R.animator.regain_size);
                         regainer.setTarget(v);
                         regainer.start();
+                        Log.d(TAG, "Write Database");
+                        tab1Database.writeToDatabase("test");
+                        Log.d(TAG, "refreshList Start");
+                        TabFragments currentTabFragment = (TabFragments) mSectionsPageAdapter.getCurrentFragment();
+                       // Log.d(TAG, currentTabFragment.);
+                        currentTabFragment.refreshList();
+                        Log.d(TAG, "refreshList Success");
                         break;
                 }
                 return true;
@@ -102,6 +108,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadDatabases(){
-        tab1Database = new Database(getBaseContext(), "now_tasks.csv");
+        tab1Database = new Database(getBaseContext(), "now_tasks");
     }
 }
