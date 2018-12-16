@@ -5,6 +5,7 @@ import android.animation.AnimatorSet;
 import android.annotation.SuppressLint;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -35,11 +36,8 @@ public class MainActivity extends AppCompatActivity {
 
         loadDatabases();
 
-        mSectionsPageAdapter = new SectionsPageAdapter(getSupportFragmentManager());
 
-        // Set up the ViewPager with the seconds adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
-        setupViewPager(mViewPager);
+        setupViewPager();
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
@@ -84,9 +82,10 @@ public class MainActivity extends AppCompatActivity {
                         regainer.start();
                         Log.d(TAG, "Write Database");
                         tab1Database.writeToDatabase("test");
-                        Log.d(TAG, "refreshList Start");
+                        Log.d(TAG, "(TabFragments) mSectionsPageAdapter.getCurrentFragment() Start");
                         TabFragments currentTabFragment = (TabFragments) mSectionsPageAdapter.getCurrentFragment();
-                       // Log.d(TAG, currentTabFragment.);
+                        Log.d(TAG, "Current Tab Fragment TAG: " + ((Fragment)currentTabFragment).getTag());
+                        Log.d(TAG, "refreshList Start");
                         currentTabFragment.refreshList();
                         Log.d(TAG, "refreshList Success");
                         break;
@@ -100,11 +99,12 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void setupViewPager(ViewPager viewPager) {
-        SectionsPageAdapter adapter = new SectionsPageAdapter(getSupportFragmentManager());
-        adapter.addFragment(new Tab1Fragment(), "TAB1");
-        adapter.addFragment(new Tab2Fragment(), "TAB2");
-        viewPager.setAdapter(adapter);
+    private void setupViewPager() {
+        mViewPager = (ViewPager) findViewById(R.id.container);
+        mSectionsPageAdapter = new SectionsPageAdapter(getSupportFragmentManager());
+        mSectionsPageAdapter.addFragment(new Tab1Fragment(), "TAB1");
+        mSectionsPageAdapter.addFragment(new Tab2Fragment(), "TAB2");
+        mViewPager.setAdapter(mSectionsPageAdapter);
     }
 
     private void loadDatabases(){

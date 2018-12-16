@@ -12,10 +12,10 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.content.ContentValues.TAG;
+
 
 public class SectionsPageAdapter extends FragmentPagerAdapter {
-
+    private static final String TAG = "SectionsPageAdapter";
     private final List<Fragment> mFragmentList = new ArrayList<>();
     private final List<String> mFragmentTitleList = new ArrayList<>();
     private Fragment mCurrentFragment;
@@ -49,6 +49,7 @@ public class SectionsPageAdapter extends FragmentPagerAdapter {
 
 
     public Fragment getCurrentFragment() {
+        Log.d(TAG, "Returning Current Fragment");
         return mCurrentFragment;
     }
 
@@ -56,8 +57,9 @@ public class SectionsPageAdapter extends FragmentPagerAdapter {
     public void setPrimaryItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
         Log.d(TAG, "Set Primary Fragment");
         if (getCurrentFragment() != object) {
+            Log.d(TAG, "Current Fragment = null");
             mCurrentFragment = ((Fragment) object);
-            Log.d(TAG, "Set Primary Fragment Defined");
+            Log.d(TAG, "Set Primary Fragment Defined. TAG: " + mCurrentFragment.getTag());
         }
         super.setPrimaryItem(container, position, object);
     }

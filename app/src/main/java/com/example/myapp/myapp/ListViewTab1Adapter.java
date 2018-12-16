@@ -5,6 +5,7 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -17,9 +18,11 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 public class ListViewTab1Adapter extends BaseAdapter {
+    private static final String TAG = "ListViewTab1Adapter";
     Context context;
     ArrayList<String> data;
     private static LayoutInflater inflater = null;
+
 
     public ListViewTab1Adapter(Context context, ArrayList<String> data) {
         // TODO Auto-generated constructor stub
@@ -29,8 +32,11 @@ public class ListViewTab1Adapter extends BaseAdapter {
     }
 
     public void updateList(ArrayList<String> newList) {
+        Log.d(TAG, "updateList()");
         data = newList;
+        Log.d(TAG, "data = newList");
         notifyDataSetChanged();
+        Log.d(TAG, "notifyDataSetChanged()");
     }
 
     @Override

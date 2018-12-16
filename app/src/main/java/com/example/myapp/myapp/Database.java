@@ -22,15 +22,15 @@ import java.util.List;
 import static android.content.ContentValues.TAG;
 
 public class Database {
+    private static final String TAG = "Database";
 
-
-    private List<String> data = new ArrayList<String>();
+    private List<Task> data = new ArrayList<Task>();
+    private List<String> dataHeaders = new ArrayList<String>();
     private Context context;
     private String filename;
     private File databaseFile;
     String databasePath;
-    //TODO check if context passes here correctly...
-    //TODO https://stackoverflow.com/questions/43055661/reading-csv-file-in-android-app
+
     Database(Context c, String f){
         context = c;
         filename = f;
@@ -49,15 +49,6 @@ public class Database {
         } else {
             Log.d(TAG, "Database file exists");
         }
-
-
-        //TODO datadir is broken
-        //filename = context.getApplicationInfo().dataDir + File.separatorChar + f;
-       //Log.d("VariableTag",filename);
-
-
-
-
         compileDatabase();
     }
 
@@ -83,18 +74,17 @@ public class Database {
 
     private void compileDatabase() {
         try {
-
-            //TODO this might be broke
-            //File csvfile = new File(filename);
-            //CSVReader reader = new CSVReader(new InputStreamReader(context.getResources().openRawResource(R.raw.now_tasks)));//Specify asset file name
-
-            //TODO this might be broke
             CSVReader reader = new CSVReader(new FileReader(databaseFile.getAbsolutePath()));
-
+            int counter = 0;
             String[] nextLine;
+
+            if (((nextLine = reader.readNext()) != null) && (counter == 0)) {
+                setDataHeaders(nextLine);
+                counter++;
+            }
             while ((nextLine = reader.readNext()) != null){
-                //Log.d("VariableTag", nextLine[0]);
-                data.add(nextLine[0]);
+                data.add(new Task(dataHeaders, nextLine));
+                counter++;
             }
             reader.close();
         } catch (IOException e) {
@@ -103,28 +93,31 @@ public class Database {
         }
     }
 
-    //TODO This is broken.
     public void writeToDatabase(String s) {
         String[] newItem = {s};
-       // File csvfile = new File(filename);
         try {
             Log.d(TAG, "Writing file");
             CSVWriter writer = new CSVWriter(new FileWriter(databaseFile, true));
 
             writer.writeNext(newItem);
             writer.close();
+            //TODO fix this, data now takes 'TASKS'
             data.add(newItem[0]);
             Log.d(TAG, "File Written");
-
 
         } catch (IOException e) {
             e.printStackTrace();
             Log.d(TAG, "Error Reading File");
         }
     }
-
+    //TODO fix this, data now takes 'TASKS'
     public ArrayList<String> readDatabse() {
+        Log.d(TAG, "readDatabase()");
         return (ArrayList<String>) data;
+    }
+
+    private void setDataHeaders(String [] line) {
+        dataHeaders = new ArrayList<String>(Arrays.asList(line));
     }
 
 
@@ -134,9 +127,7 @@ public class Database {
 
 
 
-
-
-    public static int getResId(String resName, Class<?> c) {
+    private static int getResId(String resName, Class<?> c) {
 
         try {
             Field idField = c.getDeclaredField(resName);
