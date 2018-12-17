@@ -1,6 +1,5 @@
 package com.example.myapp.myapp;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -22,7 +21,9 @@ public class Tab1Fragment extends Fragment implements TabFragments {
         View view = inflater.inflate(R.layout.tab1_fragment, container, false);
 
         listView = (ListView)view.findViewById(R.id.tab1_listview);
-        listViewTab1Adapter = new ListViewTab1Adapter(container.getContext(), MainActivity.tab1Database.readDatabse());
+        Task [] tasks = MainActivity.tab1Database.getDatabseTasks();
+
+        listViewTab1Adapter = new ListViewTab1Adapter(container.getContext(), Task.getTaskDataListByHeader(0, tasks));
         listView.setAdapter(listViewTab1Adapter);
 
         return view;
@@ -41,7 +42,7 @@ public class Tab1Fragment extends Fragment implements TabFragments {
 */
     public void refreshList() {
         Log.d(TAG, "refreshList()");
-        listViewTab1Adapter.updateList(MainActivity.tab1Database.readDatabse());
+        listViewTab1Adapter.updateList(MainActivity.tab1Database.getDatabseTasks());
         Log.d(TAG, "refreshList() success");
     }
 

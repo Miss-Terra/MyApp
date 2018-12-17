@@ -58,6 +58,7 @@ public class Database {
         Log.d(TAG, "Stream 1 created");
         FileOutputStream out = new FileOutputStream(databasePath);
         Log.d(TAG, "Streams created");
+
         byte[] buff = new byte[1024];
         int read = 0;
         try {
@@ -93,27 +94,60 @@ public class Database {
         }
     }
 
-    public void writeToDatabase(String s) {
-        String[] newItem = {s};
-        try {
-            Log.d(TAG, "Writing file");
-            CSVWriter writer = new CSVWriter(new FileWriter(databaseFile, true));
+    public void writeToDatabase(Task task) {
+        if (!Arrays.equals(task.getHeaders(), dataHeaders.toArray(new String[dataHeaders.size()]))){ //Rewrite file with new headers
+            Log.d(TAG, "Starting file rewrite, with new headers");
+            String [] taskHeaders = task.getHeaders();
+            try {
+                Log.d(TAG, "Rewriting headers in csv file");
+                CSVWriter writer = new CSVWriter(new FileWriter(databaseFile, false)); // false = Overwrite file
+                writer.writeNext(taskHeaders);
+                Log.d(TAG, "Headers Written to File");
 
-            writer.writeNext(newItem);
-            writer.close();
-            //TODO fix this, data now takes 'TASKS'
-            data.add(newItem[0]);
-            Log.d(TAG, "File Written");
+                Log.d(TAG, "Adding Task to Database ArrayList");
+                data.add(task);
+                Log.d(TAG, "Added Task to Database ArrayList");
 
-        } catch (IOException e) {
-            e.printStackTrace();
-            Log.d(TAG, "Error Reading File");
+                for (int i = 0; i < data.size(); i++) {
+                    writer.writeNext(data.get(i).getFields());
+                    Log.d(TAG, "Writing Old Task Fields");
+                }
+                Log.d(TAG, "Task Fields Written");
+
+                writer.close();
+
+                Log.d(TAG, "File Written");
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.d(TAG, "Error Reading File");
+            }
+
+        } else { //Append new task
+            Log.d(TAG, "Appending File with new task, headers match");
+            String[] fields = task.getFields();
+
+            try {
+                Log.d(TAG, "Writing file");
+                CSVWriter writer = new CSVWriter(new FileWriter(databaseFile, true));
+                Log.d(TAG, "Adding Task to Database ArrayList");
+                data.add(task);
+                Log.d(TAG, "Added Task to Database ArrayList");
+
+                writer.writeNext(fields);
+                writer.close();
+                Log.d(TAG, "File Written");
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.d(TAG, "Error Reading File");
+            }
+
         }
     }
-    //TODO fix this, data now takes 'TASKS'
-    public ArrayList<String> readDatabse() {
-        Log.d(TAG, "readDatabase()");
-        return (ArrayList<String>) data;
+    public Task [] getDatabseTasks() {
+        Log.d(TAG, "getDatabaseTasks()");
+        return data.toArray(new Task[data.size()]);
     }
 
     private void setDataHeaders(String [] line) {
