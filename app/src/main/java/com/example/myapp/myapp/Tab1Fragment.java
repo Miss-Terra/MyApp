@@ -23,6 +23,8 @@ public class Tab1Fragment extends Fragment implements TabFragments {
         listView = (ListView)view.findViewById(R.id.tab1_listview);
         Task [] tasks = MainActivity.tab1Database.getDatabseTasks();
 
+        Log.d(TAG, tasks[0].getField(0));
+
         listViewTab1Adapter = new ListViewTab1Adapter(container.getContext(), Task.getTaskDataListByHeader(0, tasks));
         listView.setAdapter(listViewTab1Adapter);
 

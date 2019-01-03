@@ -23,6 +23,15 @@ public class Task {
         }
     }
 
+    //Dummy
+    Task(){
+        this.headers = new String[] {"h1", "h2", "h3"};
+        for (int i = 0; i < this.headers.length; i++) {
+                fields.add(new FieldPair(this.headers[i], "dummy" + i));
+        }
+
+    }
+
     // Display all data fields as one string for testing.
     @Override
     public String toString() {
@@ -43,6 +52,14 @@ public class Task {
         }
         return s;
     }
+    public String getField(int headerColumn) {
+
+        Log.d(TAG, "Getting data for " + headers[headerColumn] + " (" + headerColumn + "): ");
+        Log.d(TAG, fields.get(headerColumn).getData());
+        return fields.get(headerColumn).getData();
+
+    }
+
     public String [] getHeaders() {
         return headers;
     }
@@ -59,9 +76,14 @@ public class Task {
         return getTaskDataListByHeader(i, tasklist);
 
     }
-    //TODO fix me
+
     public static String [] getTaskDataListByHeader (int headerColumn, Task[] tasklist) {
-        int i = 0;
-        while (tag.equals(task[i].fields.))
+        String[] result = new String[tasklist.length];
+        for (int i = 0; i < tasklist.length; i++) {
+            Log.d(TAG, tasklist[0].getField(0));
+
+            result[i] = tasklist[i].getField(headerColumn);
+        }
+        return result;
     }
 }

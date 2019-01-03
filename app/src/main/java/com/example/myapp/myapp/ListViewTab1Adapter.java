@@ -16,18 +16,26 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class ListViewTab1Adapter extends BaseAdapter {
     private static final String TAG = "ListViewTab1Adapter";
     Context context;
-    ArrayList<String> data;
+    ArrayList<String> data = new ArrayList<String>();
     private static LayoutInflater inflater = null;
 
 
     public ListViewTab1Adapter(Context context, ArrayList<String> data) {
-        // TODO Auto-generated constructor stub
         this.context = context;
         this.data = data;
+        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    }
+    public ListViewTab1Adapter(Context context, String[] data) {
+        this.context = context;
+        this.data.clear();
+        Log.d(TAG, "data size = " + data.length);
+        Collections.addAll(this.data, data);
+        Log.d(TAG, "this.data size = " + this.data.size());
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -39,15 +47,23 @@ public class ListViewTab1Adapter extends BaseAdapter {
         Log.d(TAG, "notifyDataSetChanged()");
     }
 
+    public void updateList(Task[] tasks) {
+        Log.d(TAG, "updateList()");
+        ArrayList<String> newList;
+        data.clear();
+        Collections.addAll(data, Task.getTaskDataListByHeader("Name", tasks));
+        Log.d(TAG, "data = newList");
+        notifyDataSetChanged();
+        Log.d(TAG, "notifyDataSetChanged()");
+    }
+
     @Override
     public int getCount() {
-        // TODO Auto-generated method stub
         return data.size();
     }
 
     @Override
     public Object getItem(int position) {
-        // TODO Auto-generated method stub
         return data.get(position);
     }
 
@@ -71,22 +87,26 @@ public class ListViewTab1Adapter extends BaseAdapter {
         ImageView deleteImage = (ImageView) view.findViewById(R.id.delete_image);
 
 
+        //TODO set position here for reference. See https://stackoverflow.com/questions/20541821/get-listview-item-position-on-button-click
+        deleteButton.setTag(position);
         deleteButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 View parent = (View) v.getParent();
                 ImageView img = (ImageView) parent.findViewById(R.id.delete_image);
-
+                Log.d(TAG, "Item Position: " + position);
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
+                        Log.d(TAG, "Action Down");
                         AnimatorSet reducer = (AnimatorSet) AnimatorInflater.loadAnimator(v.getContext(), R.animator.reduce_size);
                         reducer.setTarget(img);
                         img.setImageResource(R.drawable.ic_delete_red_24dp);
                         reducer.start();
                         break;
 
-
+                    //TODO Implement Deletion of Task here. Need to figure out how to select correct listview position & task
                     case MotionEvent.ACTION_UP:
+                        Log.d(TAG, "Action Up");
                         AnimatorSet regainer = (AnimatorSet) AnimatorInflater.loadAnimator(v.getContext(),R.animator.regain_size);
                         regainer.setTarget(img);
                         img.setImageResource(R.drawable.ic_delete_black_24dp);

@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
                         regainer.setTarget(v);
                         regainer.start();
                         Log.d(TAG, "Write Database");
-                        tab1Database.writeToDatabase("test");
+                        tab1Database.writeToDatabase(new Task());
                         Log.d(TAG, "(TabFragments) mSectionsPageAdapter.getCurrentFragment() Start");
                         TabFragments currentTabFragment = (TabFragments) mSectionsPageAdapter.getCurrentFragment();
                         Log.d(TAG, "Current Tab Fragment TAG: " + ((Fragment)currentTabFragment).getTag());
