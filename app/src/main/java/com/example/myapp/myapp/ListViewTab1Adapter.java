@@ -94,7 +94,7 @@ public class ListViewTab1Adapter extends BaseAdapter {
             public boolean onTouch(View v, MotionEvent event) {
                 View parent = (View) v.getParent();
                 ImageView img = (ImageView) parent.findViewById(R.id.delete_image);
-                Log.d(TAG, "Item Position: " + position);
+                Log.d(TAG, "Item Position: " + (int)v.getTag());
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         Log.d(TAG, "Action Down");
@@ -111,6 +111,11 @@ public class ListViewTab1Adapter extends BaseAdapter {
                         regainer.setTarget(img);
                         img.setImageResource(R.drawable.ic_delete_black_24dp);
                         regainer.start();
+                        MainActivity.tab1Database.deleteFromDatabase((int)v.getTag()); /// remove position
+
+                        TabFragments currentTabFragment = (TabFragments) MainActivity.mSectionsPageAdapter.getCurrentFragment();
+                        currentTabFragment.refreshList();
+
                         break;
                 }
                 return true;

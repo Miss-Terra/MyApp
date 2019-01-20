@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
 
-    private SectionsPageAdapter mSectionsPageAdapter;
+    public static SectionsPageAdapter mSectionsPageAdapter;
 
     private ViewPager mViewPager;
 

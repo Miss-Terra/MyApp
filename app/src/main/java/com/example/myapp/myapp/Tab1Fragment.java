@@ -25,7 +25,7 @@ public class Tab1Fragment extends Fragment implements TabFragments {
 
         Log.d(TAG, tasks[0].getField(0));
 
-        listViewTab1Adapter = new ListViewTab1Adapter(container.getContext(), Task.getTaskDataListByHeader(0, tasks));
+        listViewTab1Adapter = new ListViewTab1Adapter(container.getContext(), Task.getTaskDataListByHeader(1, tasks));
         listView.setAdapter(listViewTab1Adapter);
 
         return view;

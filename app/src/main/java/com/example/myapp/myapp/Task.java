@@ -23,9 +23,9 @@ public class Task {
         }
     }
 
-    //Dummy
+
     Task(){
-        this.headers = new String[] {"h1", "h2", "h3"};
+        this.headers = new String[] {"Position", "Name", "Description", "Field2", "Field3"};
         for (int i = 0; i < this.headers.length; i++) {
                 fields.add(new FieldPair(this.headers[i], "dummy" + i));
         }

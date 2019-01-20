@@ -156,7 +156,35 @@ public class Database {
 
 
 
+    public void deleteFromDatabase(int position) {
 
+        data.remove(position);
+
+        Log.d(TAG, "Starting file rewrite");
+        String [] taskHeaders = new String[dataHeaders.size()];
+        dataHeaders.toArray(taskHeaders);
+        try {
+            Log.d(TAG, "Rewriting headers in csv file");
+            CSVWriter writer = new CSVWriter(new FileWriter(databaseFile, false)); // false = Overwrite file
+            writer.writeNext(taskHeaders);
+            Log.d(TAG, "Headers Written to File");
+
+            for (int i = 0; i < data.size(); i++) {
+                writer.writeNext(data.get(i).getFields());
+                Log.d(TAG, "Writing Old Task Fields");
+            }
+            Log.d(TAG, "Task Fields Written");
+
+            writer.close();
+
+            Log.d(TAG, "File Written");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.d(TAG, "Error Reading File");
+        }
+
+    }
 
 
 
