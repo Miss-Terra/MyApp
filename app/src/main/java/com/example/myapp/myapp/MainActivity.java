@@ -3,6 +3,7 @@ package com.example.myapp.myapp;
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -10,6 +11,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.EditText;
+import android.app.AlertDialog;
 
 import android.view.MotionEvent;
 import android.view.View;
@@ -62,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
 
         FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
 
-
+        //TODO create a text prompt
         floatingActionButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -80,14 +83,31 @@ public class MainActivity extends AppCompatActivity {
                         AnimatorSet regainer = (AnimatorSet) AnimatorInflater.loadAnimator(v.getContext(),R.animator.regain_size);
                         regainer.setTarget(v);
                         regainer.start();
-                        Log.d(TAG, "Write Database");
-                        tab1Database.writeToDatabase(new Task());
-                        Log.d(TAG, "(TabFragments) mSectionsPageAdapter.getCurrentFragment() Start");
-                        TabFragments currentTabFragment = (TabFragments) mSectionsPageAdapter.getCurrentFragment();
-                        Log.d(TAG, "Current Tab Fragment TAG: " + ((Fragment)currentTabFragment).getTag());
-                        Log.d(TAG, "refreshList Start");
-                        currentTabFragment.refreshList();
-                        Log.d(TAG, "refreshList Success");
+
+                        //TODO put text prompt here https://www.sitepoint.com/starting-android-development-creating-todo-app/
+                        final EditText taskEditText = new EditText(v.getContext());
+                        AlertDialog dialog = new AlertDialog.Builder(v.getContext())
+                                .setTitle("Add a new task")
+                                .setMessage("What do you want to do next?")
+                                .setView(taskEditText)
+                                .setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        String task = String.valueOf(taskEditText.getText());
+                                        Log.d(TAG, "Write Database");
+                                        tab1Database.writeToDatabase(new Task(tab1Database.getDataHeaders(), task));
+                                        Log.d(TAG, "(TabFragments) mSectionsPageAdapter.getCurrentFragment() Start");
+                                        TabFragments currentTabFragment = (TabFragments) mSectionsPageAdapter.getCurrentFragment();
+                                        Log.d(TAG, "Current Tab Fragment TAG: " + ((Fragment)currentTabFragment).getTag());
+                                        Log.d(TAG, "refreshList Start");
+                                        currentTabFragment.refreshList();
+                                        Log.d(TAG, "refreshList Success");
+                                    }
+                                })
+                                .setNegativeButton("Cancel", null)
+                                .create();
+                        dialog.show();
+
                         break;
                 }
                 return true;

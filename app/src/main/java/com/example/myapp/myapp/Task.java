@@ -11,7 +11,7 @@ public class Task {
     private List<FieldPair> fields = new ArrayList<FieldPair>();
     private String headers[];
 
-    //TODO working on compileDatabase() and changing the format of the raw csv file.
+
     Task(List<String> headers, String[] data) {
         this.headers = headers.toArray(new String[headers.size()]);
         if (this.headers.length == data.length) {
@@ -23,14 +23,26 @@ public class Task {
         }
     }
 
+    Task(List<String> headers, String name){
+        this.headers = headers.toArray(new String[headers.size()]);
+
+        for (int i = 0; i < this.headers.length; i++) {
+            if (i != 1) { // 1 = name
+                fields.add(new FieldPair(this.headers[i], ""));
+            } else {
+                fields.add(new FieldPair(this.headers[i], name));
+            }
+        }
+    }
 
     Task(){
         this.headers = new String[] {"Position", "Name", "Description", "Field2", "Field3"};
         for (int i = 0; i < this.headers.length; i++) {
                 fields.add(new FieldPair(this.headers[i], "dummy" + i));
         }
-
     }
+
+
 
     // Display all data fields as one string for testing.
     @Override

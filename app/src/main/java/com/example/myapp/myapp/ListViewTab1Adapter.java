@@ -87,7 +87,6 @@ public class ListViewTab1Adapter extends BaseAdapter {
         ImageView deleteImage = (ImageView) view.findViewById(R.id.delete_image);
 
 
-        //TODO set position here for reference. See https://stackoverflow.com/questions/20541821/get-listview-item-position-on-button-click
         deleteButton.setTag(position);
         deleteButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -104,7 +103,6 @@ public class ListViewTab1Adapter extends BaseAdapter {
                         reducer.start();
                         break;
 
-                    //TODO Implement Deletion of Task here. Need to figure out how to select correct listview position & task
                     case MotionEvent.ACTION_UP:
                         Log.d(TAG, "Action Up");
                         AnimatorSet regainer = (AnimatorSet) AnimatorInflater.loadAnimator(v.getContext(),R.animator.regain_size);

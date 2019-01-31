@@ -154,6 +154,11 @@ public class Database {
         dataHeaders = new ArrayList<String>(Arrays.asList(line));
     }
 
+    public List<String> getDataHeaders(){
+
+        return dataHeaders;
+    }
+
 
 
     public void deleteFromDatabase(int position) {
