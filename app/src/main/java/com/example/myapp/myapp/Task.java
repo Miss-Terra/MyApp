@@ -77,6 +77,12 @@ public class Task {
     }
 
     public static String [] getTaskDataListByHeader (String header, Task[] tasklist) {
+        Log.d(TAG, "Tasklist array size: " + tasklist.length);
+        //If no tasks are found... Return a empty string array. Collections.AddAll in ListViewTab1Adapter.class will treat it as empty.
+        if (tasklist.length == 0) {
+            Log.d(TAG, "No tasks, returning none");
+            return new String[0];
+        }
         String [] headers = tasklist[0].getHeaders();
         int i = 0;
         while (!headers[i].equals(header)){

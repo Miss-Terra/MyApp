@@ -5,6 +5,7 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -86,6 +87,26 @@ public class ListViewTab1Adapter extends BaseAdapter {
         Button deleteButton = (Button) view.findViewById(R.id.delete_button);
         ImageView deleteImage = (ImageView) view.findViewById(R.id.delete_image);
 
+        view.setTag(position);
+        view.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Log.d(TAG, "Item On Long Click Action");
+                Log.d(TAG, "Item Position: " + (int)v.getTag());
+
+                Vibrator vibe = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE) ;
+                AnimatorSet reducer = (AnimatorSet) AnimatorInflater.loadAnimator(v.getContext(), R.animator.reduce_size);
+                AnimatorSet regainer = (AnimatorSet) AnimatorInflater.loadAnimator(v.getContext(),R.animator.regain_size);
+                regainer.setTarget(v);
+                reducer.setTarget(v);
+
+                reducer.start();
+                vibe.vibrate(50);
+                regainer.start();
+
+                return true;
+            }
+        });
 
         deleteButton.setTag(position);
         deleteButton.setOnTouchListener(new View.OnTouchListener() {
@@ -96,7 +117,7 @@ public class ListViewTab1Adapter extends BaseAdapter {
                 Log.d(TAG, "Item Position: " + (int)v.getTag());
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        Log.d(TAG, "Action Down");
+                        Log.d(TAG, "Delete Action Down");
                         AnimatorSet reducer = (AnimatorSet) AnimatorInflater.loadAnimator(v.getContext(), R.animator.reduce_size);
                         reducer.setTarget(img);
                         img.setImageResource(R.drawable.ic_delete_red_24dp);
@@ -104,7 +125,7 @@ public class ListViewTab1Adapter extends BaseAdapter {
                         break;
 
                     case MotionEvent.ACTION_UP:
-                        Log.d(TAG, "Action Up");
+                        Log.d(TAG, "Delete Action Up");
                         AnimatorSet regainer = (AnimatorSet) AnimatorInflater.loadAnimator(v.getContext(),R.animator.regain_size);
                         regainer.setTarget(img);
                         img.setImageResource(R.drawable.ic_delete_black_24dp);
