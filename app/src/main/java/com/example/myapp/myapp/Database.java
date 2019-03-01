@@ -142,9 +142,40 @@ public class Database {
                 e.printStackTrace();
                 Log.d(TAG, "Error Reading File");
             }
-
         }
     }
+    //Update DB with default
+    public void writeToDatabase(){
+        Log.d(TAG, "Starting file rewrite, with same headers");
+        String [] taskHeaders = dataHeaders.toArray(new String[dataHeaders.size()]);
+        try {
+            Log.d(TAG, "Rewriting headers in csv file");
+            CSVWriter writer = new CSVWriter(new FileWriter(databaseFile, false)); // false = Overwrite file
+            writer.writeNext(taskHeaders);
+            Log.d(TAG, "Headers Written to File");
+
+
+            for (int i = 0; i < data.size(); i++) {
+                writer.writeNext(data.get(i).getFields());
+                Log.d(TAG, "Writing Task Fields");
+            }
+            Log.d(TAG, "Task Fields Written");
+
+            writer.close();
+
+            Log.d(TAG, "File Written");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.d(TAG, "Error Reading File");
+        }
+    }
+
+    public void updateDatabase(Task task, int dbPosition) {
+        data.set(dbPosition, task);
+        writeToDatabase();
+    }
+
     public Task [] getDatabseTasks() {
         Log.d(TAG, "getDatabaseTasks()");
         return data.toArray(new Task[data.size()]);
@@ -160,7 +191,9 @@ public class Database {
     }
 
 
-
+    public Task getTaskByPos(int position) {
+        return data.get(position);
+    }
     public void deleteFromDatabase(int position) {
 
         data.remove(position);

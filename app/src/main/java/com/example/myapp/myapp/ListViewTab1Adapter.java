@@ -5,6 +5,8 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Parcelable;
 import android.os.Vibrator;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -104,39 +106,36 @@ public class ListViewTab1Adapter extends BaseAdapter {
                 vibe.vibrate(50);
                 regainer.start();
 
+
+                Task taskToEdit = MainActivity.tab1Database.getTaskByPos((int)v.getTag()); /// Get Task
+
+                Intent intent = new Intent(context, EditTaskActivity.class);
+                intent.putExtra("TASK", (Parcelable)taskToEdit);
+                intent.putExtra("DATABASE", 1);
+
+                context.startActivity(intent);
+
                 return true;
             }
         });
 
         deleteButton.setTag(position);
-        deleteButton.setOnTouchListener(new View.OnTouchListener() {
+        deleteButton.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
+            public boolean onLongClick(View v) {
                 View parent = (View) v.getParent();
                 ImageView img = (ImageView) parent.findViewById(R.id.delete_image);
                 Log.d(TAG, "Item Position: " + (int)v.getTag());
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        Log.d(TAG, "Delete Action Down");
-                        AnimatorSet reducer = (AnimatorSet) AnimatorInflater.loadAnimator(v.getContext(), R.animator.reduce_size);
-                        reducer.setTarget(img);
-                        img.setImageResource(R.drawable.ic_delete_red_24dp);
-                        reducer.start();
-                        break;
+                Log.d(TAG, "Delete Action Up");
+                MainActivity.tab1Database.deleteFromDatabase((int) v.getTag()); /// remove position
 
-                    case MotionEvent.ACTION_UP:
-                        Log.d(TAG, "Delete Action Up");
-                        AnimatorSet regainer = (AnimatorSet) AnimatorInflater.loadAnimator(v.getContext(),R.animator.regain_size);
-                        regainer.setTarget(img);
-                        img.setImageResource(R.drawable.ic_delete_black_24dp);
-                        regainer.start();
-                        MainActivity.tab1Database.deleteFromDatabase((int)v.getTag()); /// remove position
+                TabFragments currentTabFragment = (TabFragments) MainActivity.mSectionsPageAdapter.getCurrentFragment();
+                currentTabFragment.refreshList();
+                Vibrator vibe = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE) ;
+                vibe.vibrate(50);
 
-                        TabFragments currentTabFragment = (TabFragments) MainActivity.mSectionsPageAdapter.getCurrentFragment();
-                        currentTabFragment.refreshList();
 
-                        break;
-                }
+
                 return true;
             }
         });

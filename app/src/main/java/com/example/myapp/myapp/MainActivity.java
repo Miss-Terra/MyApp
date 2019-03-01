@@ -3,6 +3,7 @@ package com.example.myapp.myapp;
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -11,6 +12,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.app.AlertDialog;
 
@@ -65,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
 
         FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
 
-        //TODO create a text prompt
+
         floatingActionButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -84,29 +86,50 @@ public class MainActivity extends AppCompatActivity {
                         regainer.setTarget(v);
                         regainer.start();
 
-                        //TODO put text prompt here https://www.sitepoint.com/starting-android-development-creating-todo-app/
+
                         final EditText taskEditText = new EditText(v.getContext());
-                        AlertDialog dialog = new AlertDialog.Builder(v.getContext())
-                                .setTitle("Add a new task")
-                                .setMessage("What do you want to do next?")
-                                .setView(taskEditText)
-                                .setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                        taskEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                            @Override
+                            public void onFocusChange(View v, boolean hasFocus) {
+                                taskEditText.post(new Runnable() {
                                     @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        String task = String.valueOf(taskEditText.getText());
-                                        Log.d(TAG, "Write Database");
-                                        tab1Database.writeToDatabase(new Task(tab1Database.getDataHeaders(), task));
-                                        Log.d(TAG, "(TabFragments) mSectionsPageAdapter.getCurrentFragment() Start");
-                                        TabFragments currentTabFragment = (TabFragments) mSectionsPageAdapter.getCurrentFragment();
-                                        Log.d(TAG, "Current Tab Fragment TAG: " + ((Fragment)currentTabFragment).getTag());
-                                        Log.d(TAG, "refreshList Start");
-                                        currentTabFragment.refreshList();
-                                        Log.d(TAG, "refreshList Success");
+                                    public void run() {
+                                        InputMethodManager inputMethodManager= (InputMethodManager) MainActivity.this.getSystemService(Context.INPUT_METHOD_SERVICE);
+                                        inputMethodManager.showSoftInput(taskEditText, InputMethodManager.SHOW_IMPLICIT);
                                     }
-                                })
-                                .setNegativeButton("Cancel", null)
-                                .create();
+                                });
+                            }
+                        });
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+                        builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                String task = String.valueOf(taskEditText.getText());
+                                Log.d(TAG, "Write Database");
+                                tab1Database.writeToDatabase(new Task(tab1Database.getDataHeaders(), task, tab1Database.getDatabseTasks().length));
+                                Log.d(TAG, "(TabFragments) mSectionsPageAdapter.getCurrentFragment() Start");
+                                TabFragments currentTabFragment = (TabFragments) mSectionsPageAdapter.getCurrentFragment();
+                                Log.d(TAG, "Current Tab Fragment TAG: " + ((Fragment)currentTabFragment).getTag());
+                                Log.d(TAG, "refreshList Start");
+                                currentTabFragment.refreshList();
+                                Log.d(TAG, "refreshList Success");
+                            }
+                        });
+                        builder.setNegativeButton("Cancel", null);
+                        builder.setTitle("New Task");
+                        builder.setMessage("What do you want to do next?");
+                        builder.setView(taskEditText);
+                        AlertDialog dialog = builder.create();
                         dialog.show();
+                        Log.d(TAG, "Text Size: " + dialog.getButton(DialogInterface.BUTTON_POSITIVE).getTextSize());
+                        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextSize(25.0f);
+                        dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextSize(25.0f);
+                        Log.d(TAG, "Text Size: " + dialog.getButton(DialogInterface.BUTTON_POSITIVE).getTextSize());
+
+                        dialog.create();
+
+                        taskEditText.requestFocus();
 
                         break;
                 }
@@ -116,7 +139,13 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+    }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        TabFragments currentTabFragment = (TabFragments) mSectionsPageAdapter.getCurrentFragment();
+        currentTabFragment.refreshList();
     }
 
     private void setupViewPager() {
@@ -130,4 +159,8 @@ public class MainActivity extends AppCompatActivity {
     private void loadDatabases(){
         tab1Database = new Database(getBaseContext(), "now_tasks");
     }
+
+
+
+
 }
